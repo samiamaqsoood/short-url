@@ -1,0 +1,18 @@
+{
+  "name": "url_shortener",
+  "version": "1.0.0",
+  "description": "The url_shortener program will generate short URLs to make understanding and visiting sites easy",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "samia",
+  "license": "ISC",
+  "dependencies": {
+    "expres": "^0.0.5",
+    "express": "^5.1.0",
+    "mongoose": "^8.16.3",
+    "nanoid": "^5.1.5"
+  }
+}
