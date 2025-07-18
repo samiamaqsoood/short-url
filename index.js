@@ -1,6 +1,8 @@
 const express = require('express')
+
 const urlRoute = require("./routes/url")
 const staticRoute = require("./routes/staticRouter")
+const userRoute = require("./routes/user")
 
 const {connectToMongoDB} = require("./connect")
 const URL = require("./models/url");
@@ -28,21 +30,23 @@ app.use(express.urlencoded({extended:false}));
 app.use("/",staticRoute);
 //direct req to route
 app.use("/url", urlRoute);
+//user route
+app.use("/user", userRoute);
 
-app.get('/:shortId',async (req, res)=>{
-    const shortId = req.params.shortId;
-       // Avoid handling favicon.ico requests
-    if (shortId === 'favicon.ico') return res.status(204).end();
-    const entry = await URL.findOneAndUpdate({shortId}, {$push:{
-        visitHistory : {
-            Timestamp : Date.now(),
-        }
-    }})
-    console.log("Redirecting for shortId:", shortId);
-console.log("Entry found:", entry);
+// app.get('/:shortId',async (req, res)=>{
+//     const shortId = req.params.shortId;
+//        // Avoid handling favicon.ico requests
+//     if (shortId === 'favicon.ico') return res.status(204).end();
+//     const entry = await URL.findOneAndUpdate({shortId}, {$push:{
+//         visitHistory : {
+//             Timestamp : Date.now(),
+//         }
+//     }})
+//     console.log("Redirecting for shortId:", shortId);
+// console.log("Entry found:", entry);
 
-    res.redirect(entry.redirectURL);
-})
+//     res.redirect(entry.redirectURL);
+// })
 
 app.listen(PORT, ()=>{
     console.log("Server is listening to port ",PORT);

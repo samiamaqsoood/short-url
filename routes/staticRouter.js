@@ -5,4 +5,12 @@ router
 .get("/", (req, res)=>{
     return res.render("Home")
 })
+
+.get("/signup", (req,res) =>{
+    return res.render("signup")
+})
+
+.get("/login", (req,res) =>{
+    return res.render("login")
+})
 module.exports = router;
