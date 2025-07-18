@@ -1,5 +1,7 @@
 const express = require('express')
 const urlRoute = require("./routes/url")
+const staticRoute = require("./routes/staticRouter")
+
 const {connectToMongoDB} = require("./connect")
 const URL = require("./models/url");
 const path = require('path');
@@ -19,26 +21,27 @@ app.set("views", path.resolve("./views"));
 
 //to parce req bodyy
 app.use(express.json());
-   //direct req to route
+//to parce form data 
+app.use(express.urlencoded({extended:false}));
+
+//Home page
+app.use("/",staticRoute);
+//direct req to route
 app.use("/url", urlRoute);
 
 app.get('/:shortId',async (req, res)=>{
     const shortId = req.params.shortId;
+       // Avoid handling favicon.ico requests
+    if (shortId === 'favicon.ico') return res.status(204).end();
     const entry = await URL.findOneAndUpdate({shortId}, {$push:{
         visitHistory : {
             Timestamp : Date.now(),
         }
     }})
+    console.log("Redirecting for shortId:", shortId);
+console.log("Entry found:", entry);
+
     res.redirect(entry.redirectURL);
-})
-
-//ger all users
-app.get("/url/test/" , async (req,res)=>{
-    const allUrls = await URL.find({});
-    return res.render('Home', {
-        urls : allUrls,
-    });
-
 })
 
 app.listen(PORT, ()=>{
