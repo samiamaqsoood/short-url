@@ -2,6 +2,7 @@ const express = require('express')
 const urlRoute = require("./routes/url")
 const {connectToMongoDB} = require("./connect")
 const URL = require("./models/url");
+const path = require('path');
 ;
 
 const app = express();
@@ -10,6 +11,9 @@ const PORT = 8001;
 // connect to DB 
 connectToMongoDB("mongodb://127.0.0.1:27017/short-url")
 
+// views - UI
+app.set("view engine", "ejs");
+app.set("views", path.resolve("./views"));
 
 //middlewares
 
@@ -26,6 +30,15 @@ app.get('/:shortId',async (req, res)=>{
         }
     }})
     res.redirect(entry.redirectURL);
+})
+
+//ger all users
+app.get("/url/test/" , async (req,res)=>{
+    const allUrls = await URL.find({});
+    return res.render('Home', {
+        urls : allUrls,
+    });
+
 })
 
 app.listen(PORT, ()=>{
