@@ -8,7 +8,7 @@ const {connectToMongoDB} = require("./connect")
 const URL = require("./models/url");
 const path = require('path');
 const cookieParser = require('cookie-parser')
-const {restrictToLoggedInUser} = require("./middlewares/auth")
+const {restrictToLoggedInUser, checkAuth} = require("./middlewares/auth")
 
 const app = express();
 const PORT = 8001;
@@ -30,26 +30,30 @@ app.use(express.urlencoded({extended:false}));
 app.use(cookieParser());
 
 //Home page
-app.use("/",staticRoute);
+app.use("/",checkAuth, staticRoute);
 //direct req to route
 app.use("/url",restrictToLoggedInUser, urlRoute);
 //user route
 app.use("/user", userRoute);
 
-// app.get('/:shortId',async (req, res)=>{
-//     const shortId = req.params.shortId;
-//        // Avoid handling favicon.ico requests
-//     if (shortId === 'favicon.ico') return res.status(204).end();
-//     const entry = await URL.findOneAndUpdate({shortId}, {$push:{
-//         visitHistory : {
-//             Timestamp : Date.now(),
-//         }
-//     }})
-//     console.log("Redirecting for shortId:", shortId);
-// console.log("Entry found:", entry);
+app.get('/:shortId',async (req, res)=>{
+    const shortId = req.params.shortId;
+       // Avoid handling favicon.ico requests
+    if (shortId === 'favicon.ico') return res.status(204).end();
+    const entry = await URL.findOneAndUpdate({shortId}, {$push:{
+        visitHistory : {
+            Timestamp : Date.now(),
+        }
+    }})
+    console.log("Redirecting for shortId:", shortId);
+console.log("Entry found:", entry);
+  if (!entry) {
+    return res.status(404).send("Short URL not found!");
+  }
 
-//     res.redirect(entry.redirectURL);
-// })
+
+    res.redirect(entry.redirectURL);
+})
 
 app.listen(PORT, ()=>{
     console.log("Server is listening to port ",PORT);

@@ -18,5 +18,28 @@
             <button type="submit">Generate</button>
         </form>
     </div>
+    <% if (locals.urls) { %>
+        <table>
+            <thead>
+                <th>Sr.no</th>
+                <th>Short ID</th>
+                <th>Redirect URL</th>
+                <th>Clicks</th>
+            </thead>
+
+            <tbody>
+                <% urls.forEach((url,index) => { %>
+                <tr>
+                 <td><%= index + 1 %></td>
+                 <td><%= url.shortId %></td>
+                 <td><%= url.redirectURL+ 1 %></td>
+                 <td><%= url.visitHistory.length %></td>
+                </tr>
+
+                <% }) %>
+            </tbody>
+        </table>
+     
+    <% } %>
 </body>
 </html>
