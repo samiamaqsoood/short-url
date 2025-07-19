@@ -7,7 +7,8 @@ const userRoute = require("./routes/user")
 const {connectToMongoDB} = require("./connect")
 const URL = require("./models/url");
 const path = require('path');
-;
+const cookieParser = require('cookie-parser')
+const {restrictToLoggedInUser} = require("./middlewares/auth")
 
 const app = express();
 const PORT = 8001;
@@ -25,11 +26,13 @@ app.set("views", path.resolve("./views"));
 app.use(express.json());
 //to parce form data 
 app.use(express.urlencoded({extended:false}));
+//to parse cookies
+app.use(cookieParser());
 
 //Home page
 app.use("/",staticRoute);
 //direct req to route
-app.use("/url", urlRoute);
+app.use("/url",restrictToLoggedInUser, urlRoute);
 //user route
 app.use("/user", userRoute);
 

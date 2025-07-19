@@ -1,8 +1,9 @@
 const User = require("../models/user")
 const {v4 : uuidv4} = require("uuid");
+const {setUser} = require("../services/auth")
 
 async function handleUserSignUp(req,res) {
-    const {name, email, password } = req.body;
+    const {name, email, password } = req.body; //valid or not? e.g length, format
     await User.create({
         name,
         email,
@@ -22,7 +23,8 @@ async function handleUserLogIn(req,res) {
 
     //if email and password is correct
     const sessionId = uuidv4();
-
+    setUser(sessionId,user);
+    res.cookie("uid",sessionId)
     res.redirect("/")
 }
 
