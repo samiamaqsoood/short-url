@@ -38,7 +38,7 @@ app.use("/",staticRoute);
 
 //direct req to route
 // app.use("/url",restrictToLoggedInUser, urlRoute);
-app.use("/url",restrictTo(["Normal"]), urlRoute);
+app.use("/url",restrictTo(["Normal","Admin"]), urlRoute);
 
 //user route
 app.use("/user", userRoute);
