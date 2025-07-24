@@ -8,7 +8,9 @@ const {connectToMongoDB} = require("./connect")
 const URL = require("./models/url");
 const path = require('path');
 const cookieParser = require('cookie-parser')
-const {restrictToLoggedInUser, checkAuth} = require("./middlewares/auth")
+// const {restrictToLoggedInUser, checkAuth} = require("./middlewares/auth")
+const {checkForAuthentication, restrictTo} = require("./middlewares/auth")
+
 
 const app = express();
 const PORT = 8001;
@@ -28,11 +30,16 @@ app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 //to parse cookies
 app.use(cookieParser());
+app.use(checkForAuthentication)
 
 //Home page
-app.use("/",checkAuth, staticRoute);
+// app.use("/",checkAuth, staticRoute);
+app.use("/",staticRoute);
+
 //direct req to route
-app.use("/url",restrictToLoggedInUser, urlRoute);
+// app.use("/url",restrictToLoggedInUser, urlRoute);
+app.use("/url",restrictTo(["Normal"]), urlRoute);
+
 //user route
 app.use("/user", userRoute);
 

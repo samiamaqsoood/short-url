@@ -21,6 +21,7 @@ function setUser(user){
     id: user._id.toString(),  // convert ObjectId to string
     name: user.name,
     email: user.email,
+    role : user.role,
   };
 
 console.log("user :",user);
